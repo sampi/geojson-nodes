@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - "@swc/core"
+  - esbuild
+
+overrides:
+  "@mui/styled-engine": "npm:@mui/styled-engine-sc@5"
