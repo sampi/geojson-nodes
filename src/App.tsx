@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, type DragEvent } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
   Background,
@@ -8,19 +8,16 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import { useStore } from "./store";
-
+import { selector, useStore } from "./store";
 import { NodesDrawer } from "./components/NodesDrawer/NodesDrawer";
-import { Node } from "./components/Node/Node";
 import { useDragAndDrop } from "./DragAndDropContext";
+import { SourceNode } from "./components/nodes/SourceNode";
+import { LayerNode } from "./components/nodes/LayerNode";
 
-const selector = (state) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  onNodesChange: state.onNodesChange,
-  onEdgesChange: state.onEdgesChange,
-  onConnect: state.onConnect,
-});
+const nodeTypes = {
+  sourceNode: SourceNode,
+  layerNode: LayerNode,
+};
 
 export default function App() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
@@ -28,15 +25,15 @@ export default function App() {
   );
   const { screenToFlowPosition } = useReactFlow();
 
-  const [type, setType] = useDragAndDrop();
+  const [type] = useDragAndDrop();
 
-  const onDragOver = useCallback((event) => {
+  const onDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer!.dropEffect = "move";
   }, []);
 
   const onDrop = useCallback(
-    (event) => {
+    (event: DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
       // check if the dropped element is valid
@@ -53,6 +50,7 @@ export default function App() {
         type,
         position,
         data: { label: `${type} node` },
+        origin: [0.5, 0.5],
       };
 
       onNodesChange([{ item: newNode, type: "add" }]);
@@ -60,18 +58,9 @@ export default function App() {
     [onNodesChange, screenToFlowPosition, type],
   );
 
-  const onDragStart = (event, nodeType) => {
-    setType(nodeType);
-    event.dataTransfer.setData("text/plain", nodeType);
-    event.dataTransfer.effectAllowed = "move";
-  };
-
   return (
     <div style={{ display: "flex", flexDirection: "row", height: "100vh" }}>
-      <NodesDrawer>
-        <Node />
-        <Node />
-      </NodesDrawer>
+      <NodesDrawer />
       <main style={{ flexGrow: 1, width: "100vw", height: "100vh" }}>
         <ReactFlow
           nodes={nodes}
@@ -80,13 +69,13 @@ export default function App() {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onDrop={onDrop}
-          onDragStart={onDragStart}
           onDragOver={onDragOver}
+          nodeTypes={nodeTypes}
           fitView
         >
           <Controls />
           <MiniMap />
-          <Background variant="dots" gap={12} size={1} />
+          <Background gap={16} size={1} />
         </ReactFlow>
       </main>
     </div>

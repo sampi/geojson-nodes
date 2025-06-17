@@ -42,3 +42,11 @@ export const useStore = create<AppState>()(
     },
   ),
 );
+
+export const selector = (state: AppState) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+});

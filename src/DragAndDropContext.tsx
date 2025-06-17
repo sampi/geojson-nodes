@@ -1,13 +1,16 @@
 import { createContext, useContext, useState } from "react";
 
-const DragAndDropContext = createContext([null, (_) => {}]);
+type DragAndDropContextType = [string | null, (_type: string | null) => void];
 
-export const DragAndDropProvider = ({
+const DragAndDropContext = createContext<DragAndDropContextType>([
+  null,
+  (_type: string | null) => {},
+]);
+
+export const DragAndDropProvider: React.FC<React.PropsWithChildren> = ({
   children,
-}: {
-  children: React.ReactNode;
 }) => {
-  const [type, setType] = useState(null);
+  const [type, setType] = useState<string | null>(null);
 
   return (
     <DragAndDropContext.Provider value={[type, setType]}>
@@ -16,8 +19,7 @@ export const DragAndDropProvider = ({
   );
 };
 
-export default DragAndDropContext;
-
-export const useDragAndDrop = () => {
+// eslint-disable-next-line react-refresh/only-export-components
+export const useDragAndDrop = (): DragAndDropContextType => {
   return useContext(DragAndDropContext);
 };
