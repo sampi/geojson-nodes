@@ -27,3 +27,7 @@ Violates the "don't create folders until you have 2+ files" principle
 
 
 SourceNode should fetch the JSON and not LayerNode - because Intersection would have to reimplement fetching!!
+
+
+store:
+ { loading: true, data: null, error: null } <- should be shared maybe?

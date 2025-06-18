@@ -8,12 +8,21 @@ import {
 
 export type AppNode = Node;
 
+export type GeoJSONData = {
+  loading: boolean;
+  data: Record<string, unknown> | null; // GeoJSON data
+  error: string | null;
+};
+
 export type AppState = {
   nodes: AppNode[];
   edges: Edge[];
   onNodesChange: OnNodesChange<AppNode>;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
-  setNodes: (nodes: AppNode[]) => void;
-  setEdges: (edges: Edge[]) => void;
+  setNodes: (_nodes: AppNode[]) => void;
+  setEdges: (_edges: Edge[]) => void;
+  geojsonData: Record<string, GeoJSONData>;
+  fetchGeoJSON: (_url: string) => Promise<void>;
+  getGeoJSON: (_url: string) => GeoJSONData;
 };

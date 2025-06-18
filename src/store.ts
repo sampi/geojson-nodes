@@ -2,15 +2,58 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { addEdge, applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
 
-import { initialNodes } from "./nodes";
-import { initialEdges } from "./edges";
 import { type AppState } from "./types";
 
 export const useStore = create<AppState>()(
   persist(
     (set, get) => ({
-      nodes: initialNodes,
-      edges: initialEdges,
+      nodes: [],
+      edges: [],
+      geojsonData: {},
+      fetchGeoJSON: async (url: string) => {
+        set({
+          geojsonData: {
+            ...get().geojsonData,
+            [url]: { loading: true, data: null, error: null },
+          },
+        });
+
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch: ${response.statusText}`);
+          }
+          const data = await response.json();
+
+          set({
+            geojsonData: {
+              ...get().geojsonData,
+              [url]: { loading: false, data, error: null },
+            },
+          });
+        } catch (error) {
+          set({
+            geojsonData: {
+              ...get().geojsonData,
+              [url]: {
+                loading: false,
+                data: null,
+                error: error instanceof Error ? error.message : "Unknown error",
+              },
+            },
+          });
+        }
+      },
+      getGeoJSON: (url: string) => {
+        const current = get().geojsonData[url];
+
+        if (!current) {
+          get().fetchGeoJSON(url);
+          return { loading: true, data: null, error: null };
+        }
+
+        return current;
+      },
       onNodesChange: (changes) => {
         set({
           nodes: applyNodeChanges(changes, get().nodes),
@@ -49,4 +92,9 @@ export const selector = (state: AppState) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
+});
+
+export const geojsonSelector = (state: AppState) => ({
+  geojsonData: state.geojsonData,
+  getGeoJSON: state.getGeoJSON,
 });
