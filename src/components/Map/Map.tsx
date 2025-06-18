@@ -3,11 +3,11 @@ import styled from "styled-components";
 import { useShallow } from "zustand/react/shallow";
 import { Map as MapLibre, NavigationControl } from "react-map-gl/maplibre";
 import { GeoJsonLayer } from "@deck.gl/layers";
+import type { PickingInfo, TooltipContent } from "@deck.gl/core";
 
 import { useStore, flowSelector } from "../../store";
 
 import { DeckGLOverlay } from "./DeckGLOverlay";
-import type { PickingInfo } from "@deck.gl/core";
 
 const INITIAL_VIEW_STATE = {
   latitude: 51.47,
@@ -36,7 +36,6 @@ export const Map = ({ onMapClose }: MapProps) => {
   const { nodes, edges } = useStore(useShallow(flowSelector));
 
   const connectedLayers = useMemo(() => {
-    // Find all edges that connect sourceNodes to layerNodes
     const sourceToLayerEdges = edges.filter((edge) => {
       const sourceNode = nodes.find((node) => node.id === edge.source);
       const targetNode = nodes.find((node) => node.id === edge.target);
@@ -45,7 +44,6 @@ export const Map = ({ onMapClose }: MapProps) => {
       );
     });
 
-    // Map to connected layer data with GeoJSON
     return sourceToLayerEdges
       .map((edge) => {
         const sourceNode = nodes.find((node) => node.id === edge.source);
@@ -62,15 +60,19 @@ export const Map = ({ onMapClose }: MapProps) => {
       .filter((item) => item.layerNode && item.sourceNode);
   }, [edges, nodes]);
 
-  // Create layers from connected sourceNode → layerNode pairs
   const layers = connectedLayers
     .filter(
       ({ geojsonData }) =>
         geojsonData?.data && !geojsonData.loading && !geojsonData.error,
     )
+    .sort(
+      (a, b) =>
+        (a.layerNode?.position?.y || 0) - (b.layerNode?.position?.y || 0),
+    )
     .map(({ layerId, geojsonData }, index) => {
-      if (!geojsonData?.data) return null;
-      // Use different colors for each layer
+      if (!geojsonData?.data) {
+        return null;
+      }
       const colors = [
         [200, 0, 80, 180], // Red
         [0, 200, 80, 180], // Green
@@ -99,7 +101,7 @@ export const Map = ({ onMapClose }: MapProps) => {
     })
     .filter((layer) => layer !== null);
 
-  const getTooltip = useCallback((info: PickingInfo) => {
+  const getTooltip = useCallback<TooltipContent>((info: PickingInfo) => {
     if (!info.object) {
       return;
     }
