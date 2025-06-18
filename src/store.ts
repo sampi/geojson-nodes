@@ -90,7 +90,7 @@ export const useStore = create<AppState>()(
   ),
 );
 
-export const selector = (state: AppState) => ({
+export const flowSelector = (state: AppState) => ({
   nodes: state.nodes,
   edges: state.edges,
   onNodesChange: state.onNodesChange,

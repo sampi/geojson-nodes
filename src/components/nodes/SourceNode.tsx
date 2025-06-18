@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import {
-  Handle,
   Position,
   useReactFlow,
   type NodeProps,
@@ -11,19 +10,23 @@ import { useShallow } from "zustand/react/shallow";
 import { BaseNode } from "./BaseNode";
 import { type GeoJSONData } from "../../types";
 import { useStore } from "../../store";
+import { Handle } from "./Handle";
 
 export type SourceNodeType = Node<{
   url: string;
   geojsonData: GeoJSONData | null;
 }>;
 
-export function SourceNode({ id, data: { url, geojsonData } }: NodeProps<SourceNodeType>) {
+export function SourceNode({
+  id,
+  data: { url, geojsonData },
+}: NodeProps<SourceNodeType>) {
   const { updateNodeData } = useReactFlow();
   const { fetchGeoJSON, geojsonData: storeData } = useStore(
     useShallow((state) => ({
       fetchGeoJSON: state.fetchGeoJSON,
       geojsonData: state.geojsonData,
-    }))
+    })),
   );
 
   useEffect(() => {
@@ -71,6 +74,7 @@ export function SourceNode({ id, data: { url, geojsonData } }: NodeProps<SourceN
         type="source"
         position={Position.Right}
         onConnect={(params) => console.log("source handle onConnect", params)}
+        connectionCount={1}
       />
     </BaseNode>
   );

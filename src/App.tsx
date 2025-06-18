@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-import { selector, useStore } from "./store";
+import { flowSelector, useStore } from "./store";
 import { Flow } from "./components/Flow/Flow";
 import { Map } from "./components/Map/Map";
 
 export default function App() {
   const [mapOpen, setMapOpen] = useState(false);
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
-    useShallow(selector),
+    useShallow(flowSelector),
   );
 
   return (

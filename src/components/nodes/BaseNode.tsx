@@ -4,7 +4,8 @@ const BaseNodeContainer = styled.article`
   background-color: var(--color-background);
   color: var(--color-foreground);
   border-radius: var(--space-unit);
-  border: 1px solid var(--color-border);
+  box-shadow: var(--box-shadow-glass);
+  border: var(--border-glass);
   padding: var(--space-unit);
   margin-bottom: var(--space-unit);
   text-align: center;
@@ -12,7 +13,6 @@ const BaseNodeContainer = styled.article`
     margin-bottom: 0;
   }
 `;
-
 
 export const BaseNode: React.FC<
   React.PropsWithChildren<
