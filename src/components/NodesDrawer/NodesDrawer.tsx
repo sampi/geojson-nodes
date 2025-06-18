@@ -22,9 +22,6 @@ export const NodesDrawer = () => {
 
   return (
     <NodesDrawerContainer>
-      <div className="description">
-        You can drag these nodes to the pane on the left.
-      </div>
       <BaseNode
         onDragStart={(event) => onDragStart(event, "sourceNode")}
         draggable

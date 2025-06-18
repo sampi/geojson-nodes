@@ -1,4 +1,4 @@
-import { BaseNode } from "./BaseNode";
+import { useEffect, useRef, useState } from "react";
 import {
   Handle,
   Position,
@@ -6,8 +6,9 @@ import {
   useNodesData,
 } from "@xyflow/react";
 
-import { isSourceNode, type SourceNodeType } from "./SourceNode";
-import { useEffect, useRef, useState } from "react";
+import { BaseNode } from "./BaseNode";
+import { type SourceNodeType } from "./SourceNode";
+import { isSourceNode } from "../../utils/isSourceNode";
 
 export function LayerNode() {
   const connections = useNodeConnections({
@@ -15,12 +16,6 @@ export function LayerNode() {
   });
   const nodesData = useNodesData<SourceNodeType>(connections[0]?.source);
   const sourceNode = isSourceNode(nodesData) ? nodesData : null;
-
-  console.log({
-    connections,
-    nodesData,
-    sourceNode,
-  });
 
   const [geoJsonData, setGeoJsonData] = useState<object | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,10 +48,8 @@ export function LayerNode() {
     };
 
     const currentUrl = sourceNode?.data?.url;
-    console.log("current url:", currentUrl);
 
     if (!currentUrl) {
-      console.log("no currentURL");
       setGeoJsonData(null);
       setError(null);
       previousUrlRef.current = null;
@@ -64,7 +57,6 @@ export function LayerNode() {
     }
 
     if (currentUrl !== previousUrlRef.current) {
-      console.log("new url");
       previousUrlRef.current = currentUrl;
       fetchGeoJsonData(currentUrl);
     }
@@ -90,8 +82,7 @@ export function LayerNode() {
       {geoJsonData && !isLoading && !error && (
         <div style={{ marginTop: "8px", fontSize: "12px", color: "green" }}>
           GeoJSON loaded (
-          {(geoJsonData as { features?: unknown[] }).features
-            ?.length || 0}{" "}
+          {(geoJsonData as { features?: unknown[] }).features?.length || 0}{" "}
           features)
         </div>
       )}

@@ -45,11 +45,20 @@ export default function App() {
         x: event.clientX,
         y: event.clientY,
       });
+      
+      // Initialize node data based on type
+      let data;
+      if (type === 'sourceNode') {
+        data = { url: '' };
+      } else {
+        data = { label: `${type} node` };
+      }
+      
       const newNode = {
         id: window.crypto.randomUUID(),
         type,
         position,
-        data: { label: `${type} node` },
+        data,
         origin: [0.5, 0.5],
       };
 
