@@ -11,6 +11,10 @@ export const useStore = create<AppState>()(
       edges: [],
       geojsonData: {},
       fetchGeoJSON: async (url: string) => {
+        if (get().geojsonData?.[url]?.loading) {
+          return;
+        }
+
         set({
           geojsonData: {
             ...get().geojsonData,

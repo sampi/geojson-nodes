@@ -7,6 +7,7 @@ import App from "./App.tsx";
 import { DragAndDropProvider } from "./DragAndDropContext.tsx";
 import { GlobalStyle } from "./GlobalStyle.tsx";
 
+import "maplibre-gl/dist/maplibre-gl.css";
 import "@xyflow/react/dist/style.css";
 
 createRoot(document.getElementById("root")!).render(

@@ -33,3 +33,6 @@ store:
  { loading: true, data: null, error: null } <- should be shared maybe?
 
 glass style for everything for fun xd
+  use Carto colors as accents: https://carto.com/brand
+
+when loading new geojson data, try to figure out how to center/zoom so it's all visible on initial load
