@@ -5,22 +5,21 @@ import {
   type OnEdgesChange,
   type OnConnect,
 } from "@xyflow/react";
-
-export type AppNode = Node;
+import type { GeoJSON } from "geojson";
 
 export type GeoJSONData = {
   loading: boolean;
-  data: Record<string, unknown> | null; // GeoJSON data
+  data: GeoJSON | null; // GeoJSON data
   error: string | null;
 };
 
 export type AppState = {
-  nodes: AppNode[];
+  nodes: Node[];
   edges: Edge[];
-  onNodesChange: OnNodesChange<AppNode>;
+  onNodesChange: OnNodesChange<Node>;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
-  setNodes: (_nodes: AppNode[]) => void;
+  setNodes: (_nodes: Node[]) => void;
   setEdges: (_edges: Edge[]) => void;
   geojsonData: Record<string, GeoJSONData>;
   fetchGeoJSON: (_url: string) => Promise<void>;

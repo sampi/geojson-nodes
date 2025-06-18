@@ -3,11 +3,14 @@ import styled from "styled-components";
 import { useShallow } from "zustand/react/shallow";
 import { Map as MapLibre, NavigationControl } from "react-map-gl/maplibre";
 import { GeoJsonLayer } from "@deck.gl/layers";
-import type { PickingInfo, TooltipContent } from "@deck.gl/core";
+import type { PickingInfo } from "@deck.gl/core";
+import { getConnectedEdges } from "@xyflow/react";
 
 import { useStore, flowSelector } from "../../store";
 
 import { DeckGLOverlay } from "./DeckGLOverlay";
+
+import type { GeoJSONData } from "../../types";
 
 const INITIAL_VIEW_STATE = {
   latitude: 51.47,
@@ -36,19 +39,21 @@ export const Map = ({ onMapClose }: MapProps) => {
   const { nodes, edges } = useStore(useShallow(flowSelector));
 
   const connectedLayers = useMemo(() => {
-    const sourceToLayerEdges = edges.filter((edge) => {
-      const sourceNode = nodes.find((node) => node.id === edge.source);
-      const targetNode = nodes.find((node) => node.id === edge.target);
-      return (
-        sourceNode?.type === "sourceNode" && targetNode?.type === "layerNode"
-      );
-    });
+    const layerNodes = nodes.filter((node) => node.type === "layerNode");
 
-    return sourceToLayerEdges
+    const edgesConnectedToLayerNodes = getConnectedEdges(layerNodes, edges);
+
+    return edgesConnectedToLayerNodes
       .map((edge) => {
         const sourceNode = nodes.find((node) => node.id === edge.source);
         const layerNode = nodes.find((node) => node.id === edge.target);
-        const geojsonData = sourceNode?.data?.geojsonData;
+        const geojsonData = sourceNode?.data?.geojsonData as
+          | {
+              data: GeoJSONData["data"] | null;
+              loading: boolean;
+              error: string | null;
+            }
+          | undefined;
 
         return {
           layerNode,
@@ -63,14 +68,17 @@ export const Map = ({ onMapClose }: MapProps) => {
   const layers = connectedLayers
     .filter(
       ({ geojsonData }) =>
-        geojsonData?.data && !geojsonData.loading && !geojsonData.error,
+        geojsonData &&
+        geojsonData.data &&
+        !geojsonData.loading &&
+        !geojsonData.error,
     )
     .sort(
       (a, b) =>
         (a.layerNode?.position?.y || 0) - (b.layerNode?.position?.y || 0),
     )
     .map(({ layerId, geojsonData }, index) => {
-      if (!geojsonData?.data) {
+      if (!geojsonData || !geojsonData.data) {
         return null;
       }
       const colors = [
@@ -84,7 +92,7 @@ export const Map = ({ onMapClose }: MapProps) => {
 
       return new GeoJsonLayer({
         id: layerId,
-        data: geojsonData.data as Record<string, unknown>,
+        data: geojsonData.data,
         // Styles
         filled: true,
         stroked: true,
@@ -101,9 +109,9 @@ export const Map = ({ onMapClose }: MapProps) => {
     })
     .filter((layer) => layer !== null);
 
-  const getTooltip = useCallback<TooltipContent>((info: PickingInfo) => {
+  const getTooltip = useCallback((info: PickingInfo) => {
     if (!info.object) {
-      return;
+      return null;
     }
 
     const fields = ["name", "type", "admin", "featureclass", "description"];

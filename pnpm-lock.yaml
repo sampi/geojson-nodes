@@ -20,6 +20,9 @@ importers:
       '@deck.gl/react':
         specifier: ^9.1.12
         version: 9.1.12(@deck.gl/core@9.1.12)(@deck.gl/widgets@9.1.12(@deck.gl/core@9.1.12))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@types/geojson':
+        specifier: ^7946.0.16
+        version: 7946.0.16
       '@xyflow/react':
         specifier: ^12.7.0
         version: 12.7.0(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)

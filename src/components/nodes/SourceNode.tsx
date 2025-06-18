@@ -70,12 +70,7 @@ export function SourceNode({
           features)
         </div>
       )}
-      <Handle
-        type="source"
-        position={Position.Right}
-        onConnect={(params) => console.log("source handle onConnect", params)}
-        connectionCount={1}
-      />
+      <Handle type="source" position={Position.Right} connectionCount={1} />
     </BaseNode>
   );
 }

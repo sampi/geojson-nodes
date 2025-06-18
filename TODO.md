@@ -38,3 +38,5 @@ glass style for everything for fun xd
 when loading new geojson data, try to figure out how to center/zoom so it's all visible on initial load
 
 css hover effects
+
+Maps.tsx, maybe use getConnectedEdges(layerNodes, allEdges) instead of the random filtering that is done right now

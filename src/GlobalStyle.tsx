@@ -10,6 +10,7 @@ export const GlobalStyle = createGlobalStyle`
     --color-border: #4c566a;
 
     --color-background-glass: rgba(255, 255, 255, 0.2);
+    --color-background-dark-glass: rgba(150, 150, 150, 0.2);
     --border-radius-glass: calc(var(--space-unit) * 2);
     --box-shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.1);
     --backdrop-filter-glass: blur(5px);

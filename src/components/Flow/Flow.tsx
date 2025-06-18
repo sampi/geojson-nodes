@@ -83,7 +83,7 @@ const StyledMiniMap = styled(MiniMap)`
     ry: var(--border-radius-glass);
   }
   .react-flow__minimap-mask {
-    display: none;
+    fill: var(--color-background-dark-glass);
   }
 `;
 
