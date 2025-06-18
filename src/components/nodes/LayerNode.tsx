@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Handle,
   Position,
@@ -6,11 +7,11 @@ import {
 } from "@xyflow/react";
 import { useShallow } from "zustand/react/shallow";
 
-import { BaseNode } from "./BaseNode";
-import { type SourceNodeType } from "./SourceNode";
 import { isSourceNode } from "../../utils/isSourceNode";
 import { geojsonSelector, useStore } from "../../store";
-import { useEffect, useState } from "react";
+
+import { BaseNode } from "./BaseNode";
+import { type SourceNodeType } from "./SourceNode";
 
 export function LayerNode() {
   const [sourceURL, setSourceURL] = useState<string | null>(null);

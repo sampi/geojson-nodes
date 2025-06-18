@@ -13,6 +13,8 @@ const BaseNodeContainer = styled.article`
   }
 `;
 
+const BaseNodeHandle = () => styled.div``;
+
 export const BaseNode: React.FC<
   React.PropsWithChildren<
     { title: string } & React.HTMLAttributes<HTMLDivElement>

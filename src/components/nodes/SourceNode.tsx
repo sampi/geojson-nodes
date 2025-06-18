@@ -1,4 +1,3 @@
-import { BaseNode } from "./BaseNode";
 import {
   Handle,
   Position,
@@ -6,6 +5,8 @@ import {
   type NodeProps,
   type Node,
 } from "@xyflow/react";
+
+import { BaseNode } from "./BaseNode";
 
 export type SourceNodeType = Node<{
   url: string;

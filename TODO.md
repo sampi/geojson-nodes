@@ -31,3 +31,5 @@ SourceNode should fetch the JSON and not LayerNode - because Intersection would 
 
 store:
  { loading: true, data: null, error: null } <- should be shared maybe?
+
+glass style for everything for fun xd
