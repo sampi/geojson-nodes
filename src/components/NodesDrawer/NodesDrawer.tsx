@@ -39,7 +39,9 @@ export const NodesDrawer = () => {
         onDragStart={(event) => onDragStart(event, "intersectionNode")}
         draggable
         title="Intersection Node"
-      ></BaseNode>
+      >
+        (not working)
+      </BaseNode>
     </NodesDrawerContainer>
   );
 };

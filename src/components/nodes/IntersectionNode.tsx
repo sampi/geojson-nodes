@@ -26,24 +26,27 @@ export function IntersectionNode({
   });
   console.log("connections", connections);
 
-  const sourceData = useNodesData(
+  const sourceData = useNodesData<SourceNodeType>(
     [connections?.[0]?.source, connections?.[1]?.source].filter(Boolean),
   );
-  console.log("sourceData", {
-    a: sourceData[0]?.data?.geoJSONData?.data,
-    b: sourceData[1]?.data?.geoJSONData?.data,
-  });
   const a = sourceData[0]?.data?.geoJSONData?.data;
   const b = sourceData[1]?.data?.geoJSONData?.data;
 
   if (a && b) {
-    const intersect = turf.intersect(a, b);
-    console.log("intersect", intersect);
+    try {
+      // @TODO Fix this, but it's almost 4 am...
+      const intersect = turf.intersect(
+        turf.featureCollection([turf.combine(a), turf.combine(b)]),
+      );
+      console.log("intersect", intersect);
 
-    if (intersect) {
-      updateNodeData(id, {
-        geoJSONData: intersect,
-      });
+      if (intersect) {
+        updateNodeData(id, {
+          geoJSONData: intersect,
+        });
+      }
+    } catch (error) {
+      console.error("Intersection failed:", error);
     }
   } else if (a || b) {
     const data = a || b;
@@ -53,16 +56,6 @@ export function IntersectionNode({
       });
     }
   }
-
-  // let data = null;
-
-  // if (connections.length === 1) {
-  //   data =
-  //   const connectedNode = connections[0].source;
-  //   // get data from sourceNode and use it as the geojson data of this node
-  // } else if (connections.length === 2) {
-  //   // call turf.intersect on a turf.intersectionCollection that contains data from both a and b
-  // }
 
   return (
     <BaseNode title="Intersection node">

@@ -42,3 +42,5 @@ css hover effects
 Maps.tsx, maybe use getConnectedEdges(layerNodes, allEdges) instead of the random filtering that is done right now
 
 when adding the first Node, the UI calls fitView for some reason...
+
+intersect doesn't seem to work for some reason, I get `geometry === undefined` and it breaks turf.js
