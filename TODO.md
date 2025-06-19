@@ -40,3 +40,5 @@ when loading new geojson data, try to figure out how to center/zoom so it's all 
 css hover effects
 
 Maps.tsx, maybe use getConnectedEdges(layerNodes, allEdges) instead of the random filtering that is done right now
+
+when adding the first Node, the UI calls fitView for some reason...

@@ -4,28 +4,28 @@ import {
   useReactFlow,
   type NodeProps,
   type Node,
+  Handle,
 } from "@xyflow/react";
 import { useShallow } from "zustand/react/shallow";
 
 import { BaseNode } from "./BaseNode";
 import { type GeoJSONData } from "../../types";
 import { useStore } from "../../store";
-import { Handle } from "./Handle";
 
 export type SourceNodeType = Node<{
   url: string;
-  geojsonData: GeoJSONData | null;
+  geoJSONData: GeoJSONData | null;
 }>;
 
 export function SourceNode({
   id,
-  data: { url, geojsonData },
+  data: { url, geoJSONData },
 }: NodeProps<SourceNodeType>) {
   const { updateNodeData } = useReactFlow();
-  const { fetchGeoJSON, geojsonData: storeData } = useStore(
+  const { fetchGeoJSON, geoJSONData: storeData } = useStore(
     useShallow((state) => ({
       fetchGeoJSON: state.fetchGeoJSON,
-      geojsonData: state.geojsonData,
+      geoJSONData: state.geoJSONData,
     })),
   );
 
@@ -38,11 +38,11 @@ export function SourceNode({
   useEffect(() => {
     if (url && storeData[url]) {
       const currentData = storeData[url];
-      if (currentData !== geojsonData) {
-        updateNodeData(id, { geojsonData: currentData });
+      if (currentData !== geoJSONData) {
+        updateNodeData(id, { geoJSONData: currentData });
       }
     }
-  }, [url, storeData, geojsonData, updateNodeData, id]);
+  }, [url, storeData, geoJSONData, updateNodeData, id]);
 
   return (
     <BaseNode title="Source node">
@@ -53,24 +53,24 @@ export function SourceNode({
         onChange={(event) => updateNodeData(id, { url: event.target.value })}
         value={url}
       />
-      {geojsonData?.loading && (
+      {geoJSONData?.loading && (
         <div style={{ marginTop: "8px", fontSize: "12px" }}>
           Loading GeoJSON...
         </div>
       )}
-      {geojsonData?.error && (
+      {geoJSONData?.error && (
         <div style={{ marginTop: "8px", fontSize: "12px", color: "red" }}>
-          Error: {geojsonData.error}
+          Error: {geoJSONData.error}
         </div>
       )}
-      {geojsonData?.data && !geojsonData.loading && !geojsonData.error && (
+      {geoJSONData?.data && !geoJSONData.loading && !geoJSONData.error && (
         <div style={{ marginTop: "8px", fontSize: "12px", color: "green" }}>
           GeoJSON loaded (
-          {(geojsonData.data as { features?: unknown[] }).features?.length || 0}{" "}
+          {(geoJSONData.data as { features?: unknown[] }).features?.length || 0}{" "}
           features)
         </div>
       )}
-      <Handle type="source" position={Position.Right} connectionCount={1} />
+      <Handle type="source" position={Position.Right} />
     </BaseNode>
   );
 }

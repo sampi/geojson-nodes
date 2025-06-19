@@ -47,7 +47,7 @@ export const Map = ({ onMapClose }: MapProps) => {
       .map((edge) => {
         const sourceNode = nodes.find((node) => node.id === edge.source);
         const layerNode = nodes.find((node) => node.id === edge.target);
-        const geojsonData = sourceNode?.data?.geojsonData as
+        const geoJSONData = sourceNode?.data?.geoJSONData as
           | {
               data: GeoJSONData["data"] | null;
               loading: boolean;
@@ -58,7 +58,7 @@ export const Map = ({ onMapClose }: MapProps) => {
         return {
           layerNode,
           sourceNode,
-          geojsonData,
+          geoJSONData,
           layerId: `layer-${layerNode?.id}`,
         };
       })
@@ -67,18 +67,18 @@ export const Map = ({ onMapClose }: MapProps) => {
 
   const layers = connectedLayers
     .filter(
-      ({ geojsonData }) =>
-        geojsonData &&
-        geojsonData.data &&
-        !geojsonData.loading &&
-        !geojsonData.error,
+      ({ geoJSONData }) =>
+        geoJSONData &&
+        geoJSONData.data &&
+        !geoJSONData.loading &&
+        !geoJSONData.error,
     )
     .sort(
       (a, b) =>
         (a.layerNode?.position?.y || 0) - (b.layerNode?.position?.y || 0),
     )
-    .map(({ layerId, geojsonData }, index) => {
-      if (!geojsonData || !geojsonData.data) {
+    .map(({ layerId, geoJSONData }, index) => {
+      if (!geoJSONData || !geoJSONData.data) {
         return null;
       }
       const colors = [
@@ -92,7 +92,7 @@ export const Map = ({ onMapClose }: MapProps) => {
 
       return new GeoJsonLayer({
         id: layerId,
-        data: geojsonData.data,
+        data: geoJSONData.data,
         // Styles
         filled: true,
         stroked: true,

@@ -15,15 +15,9 @@ import {
 import styled from "styled-components";
 
 import { useDragAndDrop } from "../../DragAndDropContext";
-import { SourceNode } from "../nodes/SourceNode";
-import { LayerNode } from "../nodes/LayerNode";
 import { DRAWER_UNIT_WIDTH, NodesDrawer } from "../NodesDrawer/NodesDrawer";
 import { UNIT_WIDTH } from "../../GlobalStyle";
-
-const nodeTypes = {
-  sourceNode: SourceNode,
-  layerNode: LayerNode,
-};
+import { nodeTypes } from "./nodeTypes";
 
 const PADDING = UNIT_WIDTH * 6;
 const MINIMAP_WIDTH = 200;

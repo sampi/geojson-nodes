@@ -6,7 +6,12 @@ import { Handle } from "./Handle";
 export function LayerNode() {
   return (
     <BaseNode title="Layer node">
-      <Handle type="target" position={Position.Left} connectionCount={1} />
+      <Handle
+        id="a"
+        type="target"
+        position={Position.Left}
+        connectionCount={1}
+      />
     </BaseNode>
   );
 }

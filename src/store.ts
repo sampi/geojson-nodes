@@ -9,15 +9,15 @@ export const useStore = create<AppState>()(
     (set, get) => ({
       nodes: [],
       edges: [],
-      geojsonData: {},
+      geoJSONData: {},
       fetchGeoJSON: async (url: string) => {
-        if (get().geojsonData?.[url]?.loading) {
+        if (get().geoJSONData?.[url]?.loading) {
           return;
         }
 
         set({
-          geojsonData: {
-            ...get().geojsonData,
+          geoJSONData: {
+            ...get().geoJSONData,
             [url]: { loading: true, data: null, error: null },
           },
         });
@@ -30,15 +30,15 @@ export const useStore = create<AppState>()(
           const data = await response.json();
 
           set({
-            geojsonData: {
-              ...get().geojsonData,
+            geoJSONData: {
+              ...get().geoJSONData,
               [url]: { loading: false, data, error: null },
             },
           });
         } catch (error) {
           set({
-            geojsonData: {
-              ...get().geojsonData,
+            geoJSONData: {
+              ...get().geoJSONData,
               [url]: {
                 loading: false,
                 data: null,
@@ -49,7 +49,7 @@ export const useStore = create<AppState>()(
         }
       },
       getGeoJSON: (url: string) => {
-        const current = get().geojsonData[url];
+        const current = get().geoJSONData[url];
 
         if (!current) {
           get().fetchGeoJSON(url);
@@ -99,6 +99,6 @@ export const flowSelector = (state: AppState) => ({
 });
 
 export const geojsonSelector = (state: AppState) => ({
-  geojsonData: state.geojsonData,
+  geoJSONData: state.geoJSONData,
   getGeoJSON: state.getGeoJSON,
 });
