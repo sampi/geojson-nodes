@@ -83,9 +83,27 @@ export const useStore = create<AppState>()(
     {
       name: "geojson-nodes-store",
       partialize: (state) => ({
-        nodes: state.nodes,
+        nodes: state.nodes.map((node) => ({
+          ...node,
+          data: {
+            ...node.data,
+            geoJSONData: undefined,
+          },
+        })),
         edges: state.edges,
       }),
+      onRehydrateStorage: (state) => {
+        return (hydratedState) => {
+          if (hydratedState?.nodes) {
+            // Refresh GeoJSON data for SourceNodes after rehydration
+            hydratedState.nodes.forEach((node) => {
+              if (node.data?.url && typeof node.data.url === 'string') {
+                hydratedState.fetchGeoJSON?.(node.data.url);
+              }
+            });
+          }
+        };
+      },
     },
   ),
 );
