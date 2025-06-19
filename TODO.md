@@ -44,3 +44,5 @@ Maps.tsx, maybe use getConnectedEdges(layerNodes, allEdges) instead of the rando
 when adding the first Node, the UI calls fitView for some reason...
 
 intersect doesn't seem to work for some reason, I get `geometry === undefined` and it breaks turf.js
+
+node data initialization should be more centralized and not just happen in `onDrop` hard-coded

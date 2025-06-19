@@ -8,54 +8,57 @@ import {
 } from "@xyflow/react";
 import * as turf from "@turf/turf";
 
+import type { GeoJSONData } from "../../types";
 import { BaseNode } from "./BaseNode";
 import { Handle } from "./Handle";
-import type { GeoJSONData } from "../../types";
+import type { SourceNodeType } from "./SourceNode";
+import { useEffect } from "react";
 
 export type IntersectionNodeType = Node<{
-  geoJSONData: GeoJSONData | null;
+  geoJsonData: GeoJSONData | null;
 }>;
 
 export function IntersectionNode({
   id,
-  data: { geoJSONData },
+  data: { geoJsonData },
 }: NodeProps<IntersectionNodeType>) {
   const { updateNodeData } = useReactFlow();
   const connections = useNodeConnections({
     handleType: "target",
   });
-  console.log("connections", connections);
 
   const sourceData = useNodesData<SourceNodeType>(
     [connections?.[0]?.source, connections?.[1]?.source].filter(Boolean),
   );
-  const a = sourceData[0]?.data?.geoJSONData?.data;
-  const b = sourceData[1]?.data?.geoJSONData?.data;
+  useEffect(() => {
+    const a = sourceData[0]?.data?.geoJsonData?.data;
+    const b = sourceData[1]?.data?.geoJsonData?.data;
 
-  if (a && b) {
-    try {
-      // @TODO Fix this, but it's almost 4 am...
-      const intersect = turf.intersect(
-        turf.featureCollection([turf.combine(a), turf.combine(b)]),
-      );
-      console.log("intersect", intersect);
+    if (a && b) {
+      try {
+        // @TODO Fix this
+        const intersect = turf.intersect(
+          turf.featureCollection([turf.combine(a), turf.combine(b)]),
+        );
+        console.log("intersect", intersect);
 
-      if (intersect) {
+        if (intersect) {
+          updateNodeData(id, {
+            geoJsonData: intersect,
+          });
+        }
+      } catch (error) {
+        console.error("Intersection failed:", error);
+      }
+    } else if (a || b) {
+      const data = a || b;
+      if (geoJsonData !== data) {
         updateNodeData(id, {
-          geoJSONData: intersect,
+          geoJsonData: a || b,
         });
       }
-    } catch (error) {
-      console.error("Intersection failed:", error);
     }
-  } else if (a || b) {
-    const data = a || b;
-    if (geoJSONData !== data) {
-      updateNodeData(id, {
-        geoJSONData: a || b,
-      });
-    }
-  }
+  }, [geoJsonData, id, sourceData, updateNodeData]);
 
   return (
     <BaseNode title="Intersection node">

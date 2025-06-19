@@ -4,12 +4,17 @@ import { useShallow } from "zustand/react/shallow";
 import { flowSelector, useStore } from "./store";
 import { Flow } from "./components/Flow/Flow";
 import { Map } from "./components/Map/Map";
+import { Dialog } from "./components/Dialog/Dialog";
 
 export default function App() {
   const [mapOpen, setMapOpen] = useState(false);
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
     useShallow(flowSelector),
   );
+
+  const handleMapClose = () => {
+    setMapOpen(false);
+  };
 
   return (
     <main style={{ width: "100vw", height: "100vh" }}>
@@ -21,18 +26,9 @@ export default function App() {
         onConnect={onConnect}
         onMapOpen={() => setMapOpen(true)}
       />
-      <dialog
-        open={mapOpen}
-        style={{
-          position: "fixed",
-          left: 0,
-          top: 0,
-          width: "100vw",
-          height: "100vh",
-        }}
-      >
-        <Map onMapClose={() => setMapOpen(false)} />
-      </dialog>
+      <Dialog isOpen={mapOpen} onClose={handleMapClose}>
+        <Map onMapClose={handleMapClose} />
+      </Dialog>
     </main>
   );
 }

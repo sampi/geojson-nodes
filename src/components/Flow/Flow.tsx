@@ -1,8 +1,6 @@
 import { useCallback, type DragEvent } from "react";
 import {
   Background,
-  Controls,
-  MiniMap,
   Panel,
   ReactFlow,
   useReactFlow,
@@ -12,74 +10,28 @@ import {
   type OnEdgesChange,
   type OnConnect,
 } from "@xyflow/react";
-import styled from "styled-components";
 
-import { useDragAndDrop } from "../../DragAndDropContext";
-import { DRAWER_UNIT_WIDTH, NodesDrawer } from "../NodesDrawer/NodesDrawer";
+import { useDragAndDrop } from "../../contexts/DragAndDrop/useDragAndDrop";
 import { UNIT_WIDTH } from "../../GlobalStyle";
+import { DRAWER_UNIT_WIDTH, NodesDrawer } from "../NodesDrawer/NodesDrawer";
+import { ActionButton } from "../ActionButton/ActionButton";
 import { nodeTypes } from "./nodeTypes";
+import { Controls } from "./Controls";
+import { MiniMap } from "./MiniMap";
+import { GlassPanel } from "./GlassPanel";
 
 const PADDING = UNIT_WIDTH * 6;
 const MINIMAP_WIDTH = 200;
 
 const fitViewOptions = {
   padding: {
-    // @TODO get types from `PaddingWithUnit`
+    // Avoid going under the Node Drawer
     left: `${UNIT_WIDTH * DRAWER_UNIT_WIDTH + PADDING}px` as `${number}px`,
+    // Avoid going under the MiniMap
+    top: `${PADDING}px` as `${number}px`,
     right: `${PADDING + MINIMAP_WIDTH}px` as `${number}px`,
   },
 };
-
-const StyledControls = styled(Controls)`
-  right: 0;
-  display: flex;
-  margin: var(--space-unit);
-  flex-direction: row;
-  justify-content: space-between;
-  box-shadow: none;
-
-  .react-flow__controls-button {
-    width: calc(var(--space-unit) * 4);
-    height: calc(var(--space-unit) * 4);
-    border-top: var(--border-glass);
-    border-bottom: var(--border-glass);
-  }
-
-  .react-flow__controls-button:first-child {
-    border-radius: var(--space-unit) 0 0 var(--space-unit);
-    border-left: var(--border-glass);
-  }
-  .react-flow__controls-button:nth-child(3) {
-    border-radius: 0 var(--space-unit) var(--space-unit) 0;
-    border-left: var(--border-glass);
-  }
-
-  .react-flow__controls-interactive {
-    margin-left: calc(var(--space-unit) * 14);
-    border-radius: var(--space-unit);
-    border: var(--border-glass);
-  }
-`;
-
-const StyledMiniMap = styled(MiniMap)`
-  bottom: 0;
-  background: var(--color-background-glass);
-  border-radius: var(--border-radius-glass);
-  box-shadow: var(--box-shadow-glass);
-  backdrop-filter: var(--backdrop-filter-glass);
-  border: var(--border-glass);
-  .react-flow__minimap-svg {
-    border-radius: var(--space-unit);
-  }
-  .react-flow__minimap-node {
-    border-radius: var(--border-radius-glass);
-    rx: var(--border-radius-glass);
-    ry: var(--border-radius-glass);
-  }
-  .react-flow__minimap-mask {
-    fill: var(--color-background-dark-glass);
-  }
-`;
 
 type FlowProps = {
   nodes: Node[];
@@ -110,7 +62,7 @@ export function Flow({
     (event: DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
-      // check if the dropped element is valid
+      // Check if the dropped element is valid
       if (!type) {
         return;
       }
@@ -121,11 +73,9 @@ export function Flow({
       });
 
       // Initialize node data based on type
-      let data;
+      let data = {};
       if (type === "sourceNode") {
         data = { url: "" };
-      } else {
-        data = { label: `${type} node` };
       }
 
       const newNode = {
@@ -133,6 +83,7 @@ export function Flow({
         type,
         position,
         data,
+        // Create new node center at cursor
         origin: [0.5, 0.5] as [number, number],
       };
 
@@ -156,24 +107,16 @@ export function Flow({
       fitViewOptions={fitViewOptions}
       fitView
     >
-      <Panel
-        position="top-left"
-        style={{
-          bottom: 0,
-          background: "var(--color-background-glass)",
-          borderRadius: "var(--border-radius-glass)",
-          boxShadow: "var(--box-shadow-glass)",
-          backdropFilter: "var(--backdrop-filter-glass)",
-          border: "var(--border-glass)",
-        }}
-      >
+      <GlassPanel position="top-left">
         <NodesDrawer />
-        <StyledControls fitViewOptions={fitViewOptions} />
-      </Panel>
+        <Controls fitViewOptions={fitViewOptions} />
+      </GlassPanel>
       <Panel position="top-right">
-        <button onClick={onMapOpen}>Map</button>
+        <ActionButton $variant="red" onClick={onMapOpen}>
+          Map
+        </ActionButton>
       </Panel>
-      <StyledMiniMap />
+      <MiniMap />
       <Background gap={16} size={1} />
     </ReactFlow>
   );

@@ -21,7 +21,6 @@ export type AppState = {
   onConnect: OnConnect;
   setNodes: (_nodes: Node[]) => void;
   setEdges: (_edges: Edge[]) => void;
-  geoJSONData: Record<string, GeoJSONData>;
+  geoJsonData: Record<string, GeoJSONData>;
   fetchGeoJSON: (_url: string) => Promise<void>;
-  getGeoJSON: (_url: string) => GeoJSONData;
 };

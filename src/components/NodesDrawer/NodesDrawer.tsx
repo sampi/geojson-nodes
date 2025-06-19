@@ -1,7 +1,7 @@
 import type { DragEvent } from "react";
 import styled from "styled-components";
 
-import { useDragAndDrop } from "../../DragAndDropContext";
+import { useDragAndDrop } from "../../contexts/DragAndDrop/useDragAndDrop";
 import { BaseNode } from "../nodes/BaseNode";
 
 export const DRAWER_UNIT_WIDTH = 32;
@@ -40,7 +40,7 @@ export const NodesDrawer = () => {
         draggable
         title="Intersection Node"
       >
-        (not working)
+        not working :(
       </BaseNode>
     </NodesDrawerContainer>
   );
