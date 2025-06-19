@@ -61,7 +61,7 @@ export function IntersectionNode({
   }, [geoJsonData, id, sourceData, updateNodeData]);
 
   return (
-    <BaseNode title="Intersection node">
+    <BaseNode title="Intersection Node">
       <Handle
         id="a"
         type="target"

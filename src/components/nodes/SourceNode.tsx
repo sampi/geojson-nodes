@@ -42,7 +42,7 @@ export function SourceNode({
   }, [url, fetchGeoJSON, geoJsonData, updateNodeData, id, storeGeoJSONData]);
 
   return (
-    <BaseNode title="Source node">
+    <BaseNode title="Source Node">
       <input
         className="nodrag"
         type="text"

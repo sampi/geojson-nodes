@@ -5,7 +5,7 @@ import { Handle } from "./Handle";
 
 export function LayerNode() {
   return (
-    <BaseNode title="Layer node">
+    <BaseNode title="Layer Node">
       <Handle
         id="a"
         type="target"
